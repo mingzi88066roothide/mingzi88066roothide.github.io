@@ -1,0 +1,66 @@
+name: 自动更新越狱源
+
+on:
+  push:
+    paths:
+      - 'pool/**'
+  workflow_dispatch:
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 设置环境
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev xz-utils zstd
+
+      - name: 生成 Packages 文件（扁平布局）
+        run: |
+          dpkg-scanpackages -m pool /dev/null > Packages
+          gzip  -9c -n Packages > Packages.gz
+          bzip2 -9c Packages > Packages.bz2
+          xz    -9c Packages > Packages.xz
+          zstd  -q -19 -c Packages > Packages.zst
+
+      - name: 生成 Release 文件
+        run: |
+          {
+            echo "Origin: Mingzi Roothide Repo"
+            echo "Label: Mingzi Roothide Repo"
+            echo "Suite: stable"
+            echo "Version: 1.0"
+            echo "Codename: ios"
+            echo "Architectures: iphoneos-arm64e"
+            echo "Components: main"
+            echo "Description: roothide专用源"
+            echo "Date: $(date -R)"
+          } > Release
+
+          echo "MD5Sum:" >> Release
+          for f in Packages Packages.gz Packages.bz2 Packages.xz Packages.zst; do
+            [ -f "$f" ] || continue
+            echo " $(md5sum "$f" | cut -d' ' -f1) $(stat -c %s "$f") $f" >> Release
+          done
+
+          echo "SHA256:" >> Release
+          for f in Packages Packages.gz Packages.bz2 Packages.xz Packages.zst; do
+            [ -f "$f" ] || continue
+            echo " $(sha256sum "$f" | cut -d' ' -f1) $(stat -c %s "$f") $f" >> Release
+          done
+
+      - name: 提交自动生成的更改
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add Release Packages Packages.gz Packages.bz2 Packages.xz Packages.zst
+          git diff --quiet && git diff --staged --quiet || git commit -m "自动更新源文件"
+          git push
