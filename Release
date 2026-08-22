@@ -1,0 +1,21 @@
+Origin: Mingzi Roothide Repo
+Label: Mingzi Roothide Repo
+Suite: stable
+Version: 1.0
+Codename: ios
+Architectures: iphoneos-arm64e
+Components: main
+Description: roothide专用源
+Date: Sat, 22 Aug 2026 06:07:02 +0000
+MD5Sum:
+ 9b4efc941fa8cd97b7cf799b960e51bd 70641 Packages
+ 25d362fe94188d9fac48b0c7ab3c67e4 20755 Packages.gz
+ 31b10355680c6fa003743b4fd994e9a1 18951 Packages.bz2
+ f1b210db1533fda373f9a4c9e5fbe3fd 18048 Packages.xz
+ f4fc3017b467ad05dc4de4f205fa3698 19279 Packages.zst
+SHA256:
+ 10c587fb667cd1ed3f8b3dd61d7fc8c771da226e82b77fbed8c4a6d3b9d19317 70641 Packages
+ 747fb806dbffa222021c2d7edc15b02a6d573b87f3ef321f031155468bad072d 20755 Packages.gz
+ e5302780c6d0e73e06313b6f65095910eb6dffbfc04107747029083f3f207c52 18951 Packages.bz2
+ ff6e0c2993971a5dc682a5a70914407cd7c39ad275f6a9b2cfdc946498cfd15d 18048 Packages.xz
+ 36798a057552ddfcd0ba26d07c067678cb861956b2d1c839b6a4abcab95c9d19 19279 Packages.zst
